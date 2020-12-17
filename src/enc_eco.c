@@ -5085,6 +5085,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
         }
     }
 #endif
+    printf("%d,%d,%d,%d,%d,%d \n", ctx->cons_pred_mode, x, y, cu_width, cu_height, core->skip_flag);
     if (!core->skip_flag)
     {
         /* get coefficients and tq */

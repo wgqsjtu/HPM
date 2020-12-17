@@ -2718,7 +2718,7 @@ static double mode_coding_unit(ENC_CTX *ctx, ENC_CORE *core, int x, int y, int c
     if (ctx->slice_type != SLICE_I && cons_pred_mode != ONLY_INTRA)
 #endif
     {
-        cost = analyze_inter_cu(ctx, core);
+        cost = analyze_inter_cu(ctx, core);  // inter prediction
         if (cu_width > 64 || cu_height > 64)
         {
             assert(!is_cu_nz(core->mod_info_best.num_nz));
@@ -2793,7 +2793,7 @@ static double mode_coding_unit(ENC_CTX *ctx, ENC_CORE *core, int x, int y, int c
 #endif
 
 #if USE_IBC
-    if ((ctx->slice_type == SLICE_I || is_cu_nz(core->mod_info_best.num_nz) || cost_best == MAX_COST) && cons_pred_mode != ONLY_INTER)  
+    if ((ctx->slice_type == SLICE_I || is_cu_nz(core->mod_info_best.num_nz) || cost_best == MAX_COST) && cons_pred_mode != ONLY_INTER) 
 #else
     /* intra *************************************************************/
     if ((ctx->slice_type == SLICE_I || is_cu_nz(core->mod_info_best.num_nz) || cost_best == MAX_COST) && cons_pred_mode != ONLY_INTER)
@@ -2823,7 +2823,7 @@ static double mode_coding_unit(ENC_CTX *ctx, ENC_CORE *core, int x, int y, int c
                 }
 #endif
                 core->mod_info_curr.ipf_flag = ipf_flag;
-                cost = analyze_intra_cu(ctx, core);
+                cost = analyze_intra_cu(ctx, core);  //intra prediction  
 #if PRINT_CU
 #if FIXED_SPLIT
                 printf("\n[intra] ctu_idx_seq %5d x %4d y %4d w %3d h %3d tree %d cost %12.1f", ctx->ctu_idx_in_sequence, x, y, cu_width, cu_height, ctx->tree_status, cost == MAX_COST ? 9999999 : cost);

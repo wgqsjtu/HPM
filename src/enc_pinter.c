@@ -3217,8 +3217,10 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
         cost = pinter_residue_rdo(ctx, core, 0
 #if DMVR
                                   , (mod_info_curr->umve_flag == 0) && ctx->info.sqh.dmvr_enable_flag
-#endif
+#endif  
         );
+        cost = 1;
+        //printf("pinter_residue_rdo \n");
         check_best_mode( core, pi, cost, cost_best );
     }
 #if SUB_TMVP
@@ -7181,6 +7183,8 @@ double analyze_inter_cu(ENC_CTX *ctx, ENC_CORE *core)
     {
 #endif
         analyze_direct_skip(ctx, core, &cost_best);
+        //cost_best = 1;
+        //printf("analyze_direct_skip \n");
 #if INTER_CU_CONSTRAINT
     }
 #endif
