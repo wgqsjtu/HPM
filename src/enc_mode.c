@@ -2719,6 +2719,8 @@ static double mode_coding_unit(ENC_CTX *ctx, ENC_CORE *core, int x, int y, int c
 #endif
     {
         cost = analyze_inter_cu(ctx, core);  // inter prediction
+        //printf("%d,%d,%d,%d,cost: %f \n",x,y, cu_width,cu_height, cost);
+        //printf("analyze_inter_cu \n");
         if (cu_width > 64 || cu_height > 64)
         {
             assert(!is_cu_nz(core->mod_info_best.num_nz));
@@ -4728,6 +4730,7 @@ static double mode_coding_tree(ENC_CTX *ctx, ENC_CORE *core, int x0, int y0, int
             ctx->cons_pred_mode = cons_pred_mode;
 #endif
             cost_temp += mode_coding_unit(ctx, core, x0, y0, cu_width_log2, cu_height_log2, cud);
+            //printf("enc: %d,%d,%d,%d,cost: %f \n", x0, y0, cu_width, cu_height, mode_coding_unit(ctx, core, x0, y0, cu_width_log2, cu_height_log2, cud));
         }
         else
         {

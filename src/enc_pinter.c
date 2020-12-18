@@ -3219,7 +3219,8 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
                                   , (mod_info_curr->umve_flag == 0) && ctx->info.sqh.dmvr_enable_flag
 #endif  
         );
-        cost = 1;
+        //if(cu_height == 128 && cu_width==128)
+            //cost = 1;
         //printf("pinter_residue_rdo \n");
         check_best_mode( core, pi, cost, cost_best );
     }
