@@ -1,0 +1,1 @@
+./app/app_encoder --config ../cfg/encode_RA.cfg --tmf /home/wgq/research/hw/texture/exp/psp/A2/ParkRunning3_3840x2160_50fps_10bit_420/mask -i ../../../../VVCSeq/D/BasketballPass_416x240_50.yuv -o a.bin -w 416 -h 240 -q 32 -z 50 -f 17 --input_bit_depth 8

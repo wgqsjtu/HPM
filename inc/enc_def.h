@@ -310,6 +310,7 @@ typedef struct _ENC_PARENT_INFO
 /* encoder parameter */
 typedef struct _ENC_PARAM
 {
+    char*          textmask_path;
 #if PHASE_2_PROFILE
     /* profile value */
     int            profile;
@@ -318,7 +319,7 @@ typedef struct _ENC_PARAM
     int            horizontal_size;
     /* picture size of input sequence (height) */
     int            vertical_size;
-    
+
     /* picture size of pictures in DPB (width) */
     int            pic_width;  // be a multiple of 8 (MINI_SIZE)
     /* picture size of pictures in DPB (height) */
@@ -465,7 +466,7 @@ typedef struct _ENC_PARAM
 #endif
 #if ESAO
     int            esao_enable_flag;
-#endif 
+#endif
 #if ALF_SHAPE
     int            adaptive_filter_shape_enable_flag;
 #endif
@@ -763,7 +764,7 @@ typedef struct _ENC_CORE
     int            x_pel;
     /* top pel position of current LCU */
     int            y_pel;
-    
+
     /* CU position in current LCU in SCU unit */
     int            cup;
     /* CU depth */
@@ -775,7 +776,7 @@ typedef struct _ENC_CORE
     /* split flag for Qt_split_flag */
     u8             split_flag;
 
-    
+
 
     /* platform specific data, if needed */
     void          *pf;
@@ -872,7 +873,7 @@ typedef struct _ENC_CORE
 
 #if USE_SP
     ENC_PARENT_INFO  cu_parent_info;
-    COM_MOTION    parent_offset[SP_MAX_SPS_CANDS]; 
+    COM_MOTION    parent_offset[SP_MAX_SPS_CANDS];
     u16           p_offset_num;
     COM_MOTION    brother_offset[SP_MAX_SPS_CANDS];
     u16           b_offset_num;
@@ -908,7 +909,6 @@ void addUniMvInfo(ENC_CORE *core, BLK_UNI_MV_INFO *tmpUniMVInfo);
 typedef struct _ENC_CTX ENC_CTX;
 struct _ENC_CTX
 {
-    u8**                  texture_mask;
     COM_INFO              info;
     /* address of current input picture, ref_picture  buffer structure */
     ENC_PICO            *pico_buf[ENC_MAX_INBUF_CNT];

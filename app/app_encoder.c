@@ -68,6 +68,8 @@ int g_DOIPrev;                              // the doi of previous frm.
 #define MAX_BS_BUF                 (32*1024*1024)
 #define PRECISE_BS_SIZE            1
 
+#define Strcat(x, fmt, ...) sprintf(x, "%s" #fmt, x, __VA_ARGS__)
+
 typedef enum _STATES
 {
     STATE_ENCODING,
@@ -88,7 +90,7 @@ typedef struct _IMGB_LIST
 
 #define CALC_SSIM           1    //calculate Multi-scale SSIM (ms_ssim)
 #if CALC_SSIM
-#define     CALC_SSIM_UV    1    //calculate Multi-scale SSIM (ms_ssim) of U/V 
+#define     CALC_SSIM_UV    1    //calculate Multi-scale SSIM (ms_ssim) of U/V
 #define     MAX_SCALE       5    //number of scales
 #define     WIN_SIZE        11   //window size for SSIM calculation
 static double exponent[MAX_SCALE] = { 0.0448, 0.2856, 0.3001, 0.2363, 0.1333 };  //weights for different scales
@@ -137,6 +139,7 @@ typedef struct _ENC_LIBPIC
 } ENC_LIBPIC;
 #endif
 //functionality
+static char op_fname_tmf[256] = "\0"; /* textrue mask file path name */
 static char op_fname_cfg[256] = "\0"; /* config file path name */
 static char op_fname_inp[256] = "\0"; /* input original video */
 static char op_fname_out[256] = "\0"; /* output bitstream */
@@ -198,7 +201,7 @@ static int  op_sp_search_range_y = SP_SEARCH_RANGE;
 #endif
 
 //regular tools (phase 1 tools first in each category)
-//intra 
+//intra
 #if IPCM
 static int  op_tool_ipcm          = 1;
 #endif
@@ -295,11 +298,11 @@ static int  op_tool_deblock_type  = 0;
 #endif
 #if DBR
 static int  op_tool_dbr           = 1;
-#endif 
+#endif
 static int  op_tool_sao           = 1;
 #if ESAO
 static int  op_tool_esao          = 1;
-#endif 
+#endif
 static int  op_tool_alf           = 1;
 #if ALF_SHAPE
 static int  op_tool_alf_shape     = 1;
@@ -370,6 +373,7 @@ static char op_wq_param_undetailed[256] = "[67,71,71,80,80,106]";
 
 typedef enum _OP_FLAGS
 {
+    OP_FLAG_FNAME_TMF,
     OP_FLAG_FNAME_CFG,
     OP_FLAG_FNAME_INP,
     OP_FLAG_FNAME_OUT,
@@ -479,7 +483,7 @@ typedef enum _OP_FLAGS
 #endif
 #if ESAO
     OP_TOOL_ESAO,
-#endif 
+#endif
     OP_TOOL_HMVP,
 #if IBC_BVP
     OP_TOOL_HBVP,
@@ -638,10 +642,16 @@ static int op_flag[OP_FLAG_MAX] = {0};
 
 static COM_ARGS_OPTION options[] =
 {
+
     {
         COM_ARGS_NO_KEY, "config", ARGS_TYPE_STRING,
         &op_flag[OP_FLAG_FNAME_CFG], op_fname_cfg,
         "file name of configuration"
+    },
+    {
+        COM_ARGS_NO_KEY, "tmf", ARGS_TYPE_STRING,
+        &op_flag[OP_FLAG_FNAME_TMF], op_fname_tmf,
+        "file name of texture mask"
     },
     {
         'i', "input", ARGS_TYPE_STRING|ARGS_TYPE_MANDATORY,
@@ -1720,7 +1730,7 @@ static int get_conf(ENC_PARAM * param)
 #else
     param->library_picture_enable_flag = 0;
 #endif
-    param->chroma_format = 1; //must be 1 in base profile 
+    param->chroma_format = 1; //must be 1 in base profile
     param->encoding_precision = (param->bit_depth_internal == 8) ? 1 : 2;
 #if HLS_RPL
     for (int i = 0; i < MAX_NUM_RPLS && op_rpl0[i][0] != 0; ++i)
@@ -2024,7 +2034,7 @@ static int get_conf(ENC_PARAM * param)
         {
             param->sample_adaptive_offset_enable_flag = 0;
         }
-#endif 
+#endif
 #if PHASE_2_PROFILE
     }
 #endif // end of PHASE_2_PROFILE
@@ -2484,7 +2494,7 @@ static void find_ms_ssim(COM_IMGB *org, COM_IMGB *rec, double ms_ssim[3], int bi
     {
       channel = 3;
     }
-#endif 
+#endif
     for (k = 0; k < channel; k++)
     {
         width = org->width[k];
@@ -2733,7 +2743,7 @@ void print_psnr(ENC_STAT * stat, double * psnr, int bitrate, COM_CLK clk_end)
             stat->poc, stype, stat->qp, psnr[0], psnr[1], psnr[2], \
             bitrate, com_clk_msec(clk_end), ms_ssim[0], ms_ssim[1], ms_ssim[2]);
     }
-    else 
+    else
     {
 #endif
         v1print("%-7d(%c) %-5d%-10.4f%-10.4f%-10.4f%-10d%-10d%-12.7f", \
@@ -3020,7 +3030,7 @@ int run_decide_libpic_candidate_set_and_extract_feature(ENC_PARAM param_in, LibV
                 v0print("cannot allocate image \n");
                 return -1;
             }
-            
+
         }
     }
 
@@ -4598,6 +4608,100 @@ int main(int argc, const char **argv)
         print_usage();
         return -1;
     }
+
+    int***  texture_mask = NULL;
+    int row = 0, column = 0;
+    for(int i = 1; i <= param_input.frames_to_be_encoded;i++)
+    {
+        //get texture mask file path
+        char text_mask_file[256];
+        char list[20];
+        strcpy(text_mask_file, op_fname_tmf);
+        sprintf(list, "/%03d.txt", i);
+        strcat(text_mask_file, list);
+
+        // read file
+        //
+        FILE* fp_mask;
+        int r, l;
+        char ch;
+        printf("%s\n", text_mask_file);
+        // read texture mask file
+        if ((fp_mask = fopen(text_mask_file, "r")) == NULL)
+        {
+            printf("texture mask file open error\n");
+            return 0;
+        }
+        if(i == 1)
+        {
+            // Statistical column number
+            while (!feof(fp_mask) && (ch = fgetc(fp_mask)) != '\n')
+            {
+                if (ch == ' ')
+                    column++;
+            }
+            column++;
+            if (column == 1)
+            {
+                printf("texture mask file no data\n");
+                return 0;
+            }
+            // Statistical column number
+            fseek(fp_mask, 0L, 0);
+            while (!feof(fp_mask))
+            {
+                if (fgetc(fp_mask) == '\n')
+                    row++;
+            }
+            //row++;
+            if (row == 1)
+            {
+                printf("texture mask file no data\n");
+                return 0;
+            }
+            printf("%d,%d\n", row,column);
+            // Allocate memory
+            texture_mask = (int***)malloc(sizeof(int**) * param_input.frames_to_be_encoded);
+            for (int k = 0; k < param_input.frames_to_be_encoded; k++)
+            {
+                texture_mask[k] = (int**)malloc(sizeof(int*) * row);
+                for (r = 0; r<row; r++)
+                    texture_mask[k][r] = (int*)malloc(sizeof(int) * column);
+            }
+            //read data
+            fseek(fp_mask, 0L, 0);
+            while (!feof(fp_mask))
+                for (r = 0; r < row; r++)
+                    for (l = 0; l < column; l++)
+                        if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
+            for (r = 0; r < row; r++)
+            {
+                for (l = 0; l < column; l++)
+                    l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
+                printf("\n");
+            }
+            fclose(fp_mask);
+
+        }
+        else
+        {
+            //read data
+            fseek(fp_mask, 0L, 0);
+            while (!feof(fp_mask))
+                for (r = 0; r < row; r++)
+                    for (l = 0; l < column; l++)
+                        if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
+            for (r = 0; r < row; r++)
+            {
+                for (l = 0; l < column; l++)
+                    l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
+                printf("\n");
+            }
+            fclose(fp_mask);
+        }
+    }
+
+
 #if LIBVC_ON
     int ori_flag = 0;
     if (!op_flag[OP_FLAG_SKIP_FRAMES_WHEN_EXTRACT_LIBPIC])
@@ -4967,7 +5071,7 @@ int main(int argc, const char **argv)
                 {
                     v2print("reached end of original file (or reading error)\n");
                     goto ERR;
-                }            
+                }
                     skip_frames(fp_inp, ilist_t->imgb, param_input.sub_sample_ratio - 1, param_input.bit_depth_input);
                     if (pic_lib_skip+1 >= libvc_data.list_poc_of_RLpic[rl_k] && libvc_data.list_poc_of_RLpic[rl_k] >= 0)
                     {
@@ -5029,7 +5133,7 @@ int main(int argc, const char **argv)
                 libvc_data.library_picture_enable_flag = param_input.library_picture_enable_flag = 0;
                 enc_libpic.state_lib = STATE_ENCODING;
                 int err = encode_one_libpic(param_input, &libvc_data, &enc_libpic);
-    
+
                 if (err)
                 {
                     v0print("Error when encode lib pic!");
@@ -5254,5 +5358,13 @@ ERR:
         fp_trace = NULL;
     }
 #endif
+    // free
+     for (int k = 0; k < param_input.frames_to_be_encoded; k++)
+     {
+        for(int r=0; r<row; r++)
+            free(texture_mask[k][r]);
+        free(texture_mask[k]);
+     }
+    free(texture_mask);
     return 0;
 }

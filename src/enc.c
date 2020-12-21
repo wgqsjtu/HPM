@@ -46,8 +46,8 @@
 #if ESAO
 #include "com_esao.h"
 #include "enc_esao.h"
-#endif 
-#if USE_SP    
+#endif
+#if USE_SP
 extern  void release_sp_instance(void* sp_encoder);
 extern  void sp_lcu_hash_save(void* sp_encoder, int x_lcu_start, int y_lcu_start);
 #endif
@@ -279,14 +279,14 @@ static void set_sqh(ENC_CTX * ctx, COM_SQH * sqh)
 {
     int i, level_id_idx;
     static int fps_code_tbl[14] = {-1, -1, 24, 25, -1, 30, 50, -1, 60, 100, 120, 200, 240, 300 };
-    static unsigned int max_bbv_size_tbl[24] = {         0,   1507328,   2015232,   2506752,    6012928, 
-                                                  10010624,  12009472,  30015488,  20004864,   50003968, 
-                                                  25001984, 100007936,  25001984, 100007936,   40009728, 
-                                                 160006144,  60014592, 240009216,  60014592,  240009216, 
+    static unsigned int max_bbv_size_tbl[24] = {         0,   1507328,   2015232,   2506752,    6012928,
+                                                  10010624,  12009472,  30015488,  20004864,   50003968,
+                                                  25001984, 100007936,  25001984, 100007936,   40009728,
+                                                 160006144,  60014592, 240009216,  60014592,  240009216,
                                                  120012800, 480002048, 240009216, 800014336              };
     static unsigned int max_bitrate_tbl[24] = {          0,   1500000,   2000000,   2500000,    6000000,
                                                   10000000,  12000000,  30000000,  20000000,   50000000,
-                                                  25000000, 100000000,  25000000, 100000000,   40000000,  
+                                                  25000000, 100000000,  25000000, 100000000,   40000000,
                                                  160000000,  60000000, 240000000,  60000000,  240000000,
                                                  120000000, 480000000, 240000000, 800000000              };
 #if PHASE_2_PROFILE
@@ -941,7 +941,7 @@ static void set_pic_header(ENC_CTX *ctx, COM_PIC_HEADER *pic_header)
     pic_header->ph_dbr_param.dbr_vertical_enabled    = FALSE;
     pic_header->ph_dbr_param.dbr_horizontal_enabled  = FALSE;
     if (ctx->info.sqh.dbr_enable_flag )
-    {        
+    {
         if (ctx->param.i_period > 1 && (pic_header->slice_type == SLICE_I || 1 == (ctx->pic_cnt % ctx->param.i_period)))
         {
             for (pic_idx = 0; pic_idx < 6; pic_idx++)
@@ -1511,7 +1511,7 @@ ERR:
     com_mfree(ctx->pic_esao_params[Y_C].lcu_flag);
     com_mfree(ctx->pic_esao_params[U_C].lcu_flag);
     com_mfree(ctx->pic_esao_params[V_C].lcu_flag);
-#endif 
+#endif
 #if ALF_SHAPE
     if (ctx->info.sqh.adaptive_leveling_filter_enable_flag)
     {
@@ -1926,7 +1926,7 @@ void enc_deblock_frame(ENC_CTX * ctx, COM_INFO *info, COM_MAP *map, COM_PIC * pi
         }
     }
 
-    if ((mcost < 0.0) && (mnum > 8)) 
+    if ((mcost < 0.0) && (mnum > 8))
     {
         dbr_pic_param->thresh_vertical_index = min_index;
         dbr_pic_param->vertical_offsets[0]   = -md1;
@@ -2116,7 +2116,7 @@ int init_seq_header( ENC_CTX * ctx, COM_BITB * bitb )
 #if ALF_SHAPE
     if(ctx->info.sqh.adaptive_leveling_filter_enable_flag)
     {
-        create_alf_global_buffers(ctx); // if ALF is closed 
+        create_alf_global_buffers(ctx); // if ALF is closed
         ctx->info.pic_header.alf_picture_param = ctx->enc_alf->alf_picture_param;
         ctx->info.pic_header.pic_alf_on = ctx->pic_alf_on;
     }
@@ -2437,7 +2437,7 @@ int enc_pic_finish(ENC_CTX *ctx, COM_BITB *bitb, ENC_STAT *stat)
 #endif
     {
         ret = com_picman_put_pic(&ctx->rpm, PIC_REC(ctx), ctx->slice_type,
-                                 ctx->ptr, ctx->info.pic_header.decode_order_index, 
+                                 ctx->ptr, ctx->info.pic_header.decode_order_index,
                                  ctx->info.pic_header.picture_output_delay, ctx->temporal_id, 0, ctx->refp);
     }
     com_assert_rv(ret == COM_OK, ret);
@@ -2530,61 +2530,6 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
     int patch_cur_index = -1;
     int num_of_patch = patch->columns *patch->rows;
     s8  *patch_sao_enable = com_malloc(sizeof(s8)*num_of_patch*N_C);
-
-    // read texture mask file
-    FILE* fp;
-    int r, l;
-    int row = 0, column = 0;
-    char ch;
-    //const char* textmask_path = "E:\\\\0-Research\\\\02-AI_encoder\\\\hpm-HPM-9.0\\\\cmake\\\\mask.txt";
-    //"E:\\\\0-Research\\\\02-AI_encoder\\\\hpm-HPM-9.0\\\\cfg\\\\encode_RA.cfg"
-    if ((fp = fopen("E:\\0-Research\\02-AI_encoder\\hpm-HPM-9.0\\cmake\\test\\mask.txt", "r")) == NULL)
-    {
-        printf("texture mask file open error\n");
-        return NULL;
-    }
-    // Statistical column number
-    while (!feof(fp) && (ch = fgetc(fp)) != '\n')
-    {
-        if (ch == ' ')
-            column++;
-    }
-    column++;
-    if (column == 1)
-    {
-        printf("texture mask file no data\n");
-        return NULL;
-    }
-    // Statistical column number
-    fseek(fp, 0L, 0);
-    while (!feof(fp))
-    {
-        if (fgetc(fp) == '\n')
-            row++;
-    }
-    row++;
-    if (row == 1)
-    {
-        printf("texture mask file no data\n");
-        return NULL;
-    }
-    // Allocate memory
-    ctx->texture_mask = (u8**)malloc(sizeof(u8*) * row);
-    for (i = 0; i < row; i++)
-        ctx->texture_mask[i] = (u8*)malloc(sizeof(u8) * column);
-    //read data
-    fseek(fp, 0L, 0);
-    while (!feof(fp))
-        for (r = 0; r < row; r++)
-            for (l = 0; l < column; l++)
-                fscanf(fp, "%d,", &ctx->texture_mask[r][l]);
-    for (r = 0; r < row; r++)
-    {
-        for (l = 0; l < column; l++)
-            l == column - 1 ? printf("%d", ctx->texture_mask[r][l]) : printf("%d,", ctx->texture_mask[r][l]);
-        printf("\n");
-    }
-    fclose(fp);
 
     for( int i = 0; i < num_of_patch; i++ )
     {
@@ -2853,7 +2798,7 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
     }
     else
 #endif
-        if (!sqh->library_stream_flag)    
+        if (!sqh->library_stream_flag)
         {
         /* reference picture marking */
         ret = com_picman_refpic_marking(&ctx->rpm, pic_header);
@@ -3132,11 +3077,11 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
 #endif
 #if USE_SP
                 core->p_offset_num = 0;
-                com_mset_x64a(core->parent_offset, 0, sizeof(COM_MOTION) * SP_MAX_SPS_CANDS); 
+                com_mset_x64a(core->parent_offset, 0, sizeof(COM_MOTION) * SP_MAX_SPS_CANDS);
                 core->b_offset_num = 0;
-                com_mset_x64a(core->brother_offset, 0, sizeof(COM_MOTION) * SP_MAX_SPS_CANDS); 
+                com_mset_x64a(core->brother_offset, 0, sizeof(COM_MOTION) * SP_MAX_SPS_CANDS);
                 core->n_offset_num = 0;
-                com_mset_x64a(core->n_recent_offset, 0, sizeof(COM_MOTION) * SP_RECENT_CANDS); 
+                com_mset_x64a(core->n_recent_offset, 0, sizeof(COM_MOTION) * SP_RECENT_CANDS);
 #endif
                 enc_eco_slice_end_flag(bs, 1);
                 enc_sbac_finish(bs, 0);
@@ -3558,11 +3503,6 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
     }
 #endif
     /* Bit-stream re-writing (END) */
-    // free
-    for (i = 0; i < row; i++)
-        free(ctx->texture_mask[i]);
-    free(ctx->texture_mask);
-
     return COM_OK;
 }
 #if PATCH
@@ -3700,7 +3640,7 @@ ENC enc_create(ENC_PARAM * param_input, int * err)
     ctx->pic_alf_Rec = NULL;
 #if ESAO
     ctx->pic_esao = NULL;
-#endif 
+#endif
     ret = com_scan_tbl_init();
     com_assert_g(ret == COM_OK, ERR);
 #if USE_SP
@@ -3998,7 +3938,7 @@ int enc_create_cu_data(ENC_CU_DATA *cu_data, int cu_width_log2, int cu_height_lo
     enc_malloc_1d((void**)&cu_data->pred_mode, size_8b);
     enc_malloc_1d((void**)&cu_data->ipf_flag, size_8b);
 #if INTERPF
-    enc_malloc_1d((void**)&cu_data->inter_filter_flag, size_8b); 
+    enc_malloc_1d((void**)&cu_data->inter_filter_flag, size_8b);
 #endif
 #if BGC
     enc_malloc_1d((void**)&cu_data->bgc_flag, size_8b);
