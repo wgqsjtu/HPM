@@ -908,6 +908,7 @@ void addUniMvInfo(ENC_CORE *core, BLK_UNI_MV_INFO *tmpUniMVInfo);
 typedef struct _ENC_CTX ENC_CTX;
 struct _ENC_CTX
 {
+    u8**                  texture_mask;
     COM_INFO              info;
     /* address of current input picture, ref_picture  buffer structure */
     ENC_PICO            *pico_buf[ENC_MAX_INBUF_CNT];

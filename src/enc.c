@@ -2531,6 +2531,61 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
     int num_of_patch = patch->columns *patch->rows;
     s8  *patch_sao_enable = com_malloc(sizeof(s8)*num_of_patch*N_C);
 
+    // read texture mask file
+    FILE* fp;
+    int r, l;
+    int row = 0, column = 0;
+    char ch;
+    //const char* textmask_path = "E:\\\\0-Research\\\\02-AI_encoder\\\\hpm-HPM-9.0\\\\cmake\\\\mask.txt";
+    //"E:\\\\0-Research\\\\02-AI_encoder\\\\hpm-HPM-9.0\\\\cfg\\\\encode_RA.cfg"
+    if ((fp = fopen("E:\\0-Research\\02-AI_encoder\\hpm-HPM-9.0\\cmake\\test\\mask.txt", "r")) == NULL)
+    {
+        printf("texture mask file open error\n");
+        return NULL;
+    }
+    // Statistical column number
+    while (!feof(fp) && (ch = fgetc(fp)) != '\n')
+    {
+        if (ch == ' ')
+            column++;
+    }
+    column++;
+    if (column == 1)
+    {
+        printf("texture mask file no data\n");
+        return NULL;
+    }
+    // Statistical column number
+    fseek(fp, 0L, 0);
+    while (!feof(fp))
+    {
+        if (fgetc(fp) == '\n')
+            row++;
+    }
+    row++;
+    if (row == 1)
+    {
+        printf("texture mask file no data\n");
+        return NULL;
+    }
+    // Allocate memory
+    ctx->texture_mask = (u8**)malloc(sizeof(u8*) * row);
+    for (i = 0; i < row; i++)
+        ctx->texture_mask[i] = (u8*)malloc(sizeof(u8) * column);
+    //read data
+    fseek(fp, 0L, 0);
+    while (!feof(fp))
+        for (r = 0; r < row; r++)
+            for (l = 0; l < column; l++)
+                fscanf(fp, "%d,", &ctx->texture_mask[r][l]);
+    for (r = 0; r < row; r++)
+    {
+        for (l = 0; l < column; l++)
+            l == column - 1 ? printf("%d", ctx->texture_mask[r][l]) : printf("%d,", ctx->texture_mask[r][l]);
+        printf("\n");
+    }
+    fclose(fp);
+
     for( int i = 0; i < num_of_patch; i++ )
     {
         for( int j = 0; j < N_C; j++ )
@@ -3503,6 +3558,11 @@ int enc_pic(ENC_CTX * ctx, COM_BITB * bitb, ENC_STAT * stat)
     }
 #endif
     /* Bit-stream re-writing (END) */
+    // free
+    for (i = 0; i < row; i++)
+        free(ctx->texture_mask[i]);
+    free(ctx->texture_mask);
+
     return COM_OK;
 }
 #if PATCH
@@ -3748,6 +3808,7 @@ ENC enc_create(ENC_PARAM * param_input, int * err)
         }
     }
 #endif
+
 #if UMVE_ENH
     ctx->dataCol = FALSE;
     ctx->needReset = FALSE;
