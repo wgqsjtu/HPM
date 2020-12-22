@@ -578,7 +578,7 @@ int enc_eco_pic_header(COM_BSW * bs, COM_PIC_HEADER * pic_header, COM_SQH * sqh)
         }
     }
 
-    com_bsw_write(bs, pic_header->decode_order_index%DOI_CYCLE_LENGTH, 8);//MX: algin with the spec, should no affect the results 
+    com_bsw_write(bs, pic_header->decode_order_index%DOI_CYCLE_LENGTH, 8);//MX: algin with the spec, should no affect the results
 #if LIBVC_ON
     if (pic_header->slice_type == SLICE_I)
     {
@@ -761,7 +761,7 @@ int enc_eco_pic_header(COM_BSW * bs, COM_PIC_HEADER * pic_header, COM_SQH * sqh)
     {
         enc_eco_esao_pic_header(bs, pic_header);
     }
-#endif 
+#endif
     if (pic_header->tool_alf_on)
     {
         /* Encode ALF flag and ALF coeff */
@@ -1395,7 +1395,7 @@ void enc_sbac_encode_binW(u32 bin, ENC_SBAC *sbac, SBAC_CTX_MODEL *model1, SBAC_
     }
 #else
     // update model 1
-    if (bin != cmps1) // LPS 
+    if (bin != cmps1) // LPS
     {
         if (g_compatible_back)
         {
@@ -2415,7 +2415,7 @@ void encode_umve_idx_sec_set(COM_BSW * bs, int umve_idx)
 }
 #endif
 
-void encode_skip_idx(COM_BSW *bs, int skip_idx, int num_hmvp_cands, 
+void encode_skip_idx(COM_BSW *bs, int skip_idx, int num_hmvp_cands,
 #if MVAP
     int num_mvap_cands,
 #endif
@@ -3851,7 +3851,7 @@ int encode_intra_dir_c(COM_BSW *bs, u8 ipm, u8 ipm_l
                     enc_sbac_encode_bin(emcpm_flag, sbac, sbac->ctx.intra_dir + 13, bs);
                 }
 
-#elif TSCPM && PMC 
+#elif TSCPM && PMC
                 if (tscpm_enable_flag && pmc_enable_flag)
                 {
 #if ENHANCE_TSPCM
@@ -3879,7 +3879,7 @@ int encode_intra_dir_c(COM_BSW *bs, u8 ipm, u8 ipm_l
                 if (pmc_enable_flag)
                 {
                     assert(mcpm_flag == !emcpm_flag);
-                    enc_sbac_encode_bin(emcpm_flag, sbac, sbac->ctx.intra_dir + 13, bs);   
+                    enc_sbac_encode_bin(emcpm_flag, sbac, sbac->ctx.intra_dir + 13, bs);
                 }
 #endif
 
@@ -3897,7 +3897,7 @@ int encode_intra_dir_c(COM_BSW *bs, u8 ipm, u8 ipm_l
                 {
                     ipm = ipm + 6;
                 }
-          
+
 
 #elif EPMC
                 if (pmc_enable_flag && emcpm_flag)
@@ -5205,7 +5205,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
             }
             else if (cu_data->umve_flag[cup])
             {
-#if UMVE_ENH 
+#if UMVE_ENH
                 if (ctx->info.pic_header.umve_set_flag)
                 {
                     encode_umve_idx_sec_set(bs, cu_data->umve_idx[cup]);
@@ -5257,7 +5257,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
                 else
                 {
 #endif
-#if UMVE_ENH 
+#if UMVE_ENH
                     if (ctx->info.pic_header.umve_set_flag)
                     {
                         encode_umve_idx_sec_set(bs, cu_data->umve_idx[cup]);
@@ -5294,7 +5294,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
                 if (core->mod_info_curr.affine_flag)
                 {
 #if AFFINE_UMVE
-                    if (ctx->info.sqh.affine_umve_enable_flag) 
+                    if (ctx->info.sqh.affine_umve_enable_flag)
                     {
                         encode_affine_umve_flag(bs, core->mod_info_curr.affine_umve_flag != 0, ctx);
                     }
@@ -5314,7 +5314,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
                 }
                 else
                 {
-                    encode_skip_idx(bs, cu_data->skip_idx[cup], ctx->info.sqh.num_of_hmvp_cand, 
+                    encode_skip_idx(bs, cu_data->skip_idx[cup], ctx->info.sqh.num_of_hmvp_cand,
 #if MVAP
                         ctx->info.sqh.num_of_mvap_cand,
 #endif
@@ -5505,7 +5505,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
                     if (core->mod_info_curr.affine_flag)
                     {
 #if AFFINE_UMVE
-                        if (ctx->info.sqh.affine_umve_enable_flag) 
+                        if (ctx->info.sqh.affine_umve_enable_flag)
                         {
                             encode_affine_umve_flag(bs, core->mod_info_curr.affine_umve_flag != 0, ctx);
                         }
@@ -5532,7 +5532,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
                             encode_inter_filter_flag( bs, cu_data->inter_filter_flag[cup] );
                         }
 #endif
-                        encode_skip_idx(bs, cu_data->skip_idx[cup], ctx->info.sqh.num_of_hmvp_cand, 
+                        encode_skip_idx(bs, cu_data->skip_idx[cup], ctx->info.sqh.num_of_hmvp_cand,
 #if MVAP
                             ctx->info.sqh.num_of_mvap_cand,
 #endif
@@ -5833,7 +5833,7 @@ int enc_eco_unit(ENC_CTX * ctx, ENC_CORE * core, int x, int y, int cup, int cu_w
 #if ENHANCE_TSPCM
                 , ctx->info.sqh.enhance_tscpm_enable_flag
 #endif
-#if PMC || EPMC 
+#if PMC || EPMC
                 , ctx->info.sqh.pmc_enable_flag
 #endif
             );
@@ -6136,7 +6136,7 @@ void encode_sp_or_ibc_cu_flag(COM_BSW *bs, int cu_width, int cu_height, ENC_CU_D
     {
         sp_or_ibc_flag = ibc_flag || sp_flag;
         enc_eco_sp_or_ibc_flag(bs, sp_or_ibc_flag);
-        if (sp_or_ibc_flag == TRUE) 
+        if (sp_or_ibc_flag == TRUE)
         {
             enc_eco_ibc(bs, ibc_flag, ctx);
         }
@@ -6293,7 +6293,7 @@ void enc_eco_sp_mvd(COM_BSW * bs, ENC_CORE *core, COM_SP_INFO *p_sp_info, u8 sp_
     int  offset_sign_flag = 0, aboveFlag = 0, offset_in_cu = 0;
     int  offset_x_in_cu = GET_TRAV_X(trav_order_index, cu_width);
     int  offset_y_in_cu = GET_TRAV_Y(trav_order_index, CONV_LOG2(cu_width));
-    if (sp_copy_dir == 1) //hor 
+    if (sp_copy_dir == 1) //hor
     {
         int offset_map_value = offset_x_in_cu;
         if (p_sp_info->offset_x == 0 && p_sp_info->offset_y == -1)
@@ -6390,7 +6390,7 @@ void enc_eco_sp(ENC_CTX* ctx, ENC_CORE * core, COM_MODE* mod_info_curr, COM_BSW 
     p_sp_info = &(cu_data->sp_strInfo[0]);
     p_sp_info += ((y & (MAX_CU_SIZE - 1)) >> 1) * (MAX_CU_SIZE >> 1) + ((x & (MAX_CU_SIZE - 1)) >> 1);
     /*string copy direction*/
-    int p_sp_info_cnt = 0; 
+    int p_sp_info_cnt = 0;
     while (cur_pixel < total_pixel)
     {
         enc_eco_sp_is_matched_flag(bs, p_sp_info->is_matched);
@@ -6436,7 +6436,7 @@ void enc_eco_sp(ENC_CTX* ctx, ENC_CORE * core, COM_MODE* mod_info_curr, COM_BSW 
             enc_eco_sp_mvd(bs, core, p_sp_info, cu_data->sp_copy_direction[cup], width, height, cur_pixel, sp_mv);
             cur_pixel += p_sp_info->length;
         }
-        else 
+        else
         {
             int* p_trav_scan_order = com_tbl_raster2trav[cu_data->sp_copy_direction[cup]][mod_info_curr->cu_width_log2 - MIN_CU_LOG2][mod_info_curr->cu_height_log2 - MIN_CU_LOG2];  // processed_count to TravOrder
 #if SP_SLR
@@ -6491,8 +6491,8 @@ void enc_eco_sp(ENC_CTX* ctx, ENC_CORE * core, COM_MODE* mod_info_curr, COM_BSW 
 #endif
         }
         p_sp_info++;
-        p_sp_info_cnt++; 
-        if (p_sp_info_cnt >= (width >> 1)) 
+        p_sp_info_cnt++;
+        if (p_sp_info_cnt >= (width >> 1))
         {
             p_sp_info_cnt = 0;
             p_sp_info = p_sp_info + ((MAX_CU_SIZE - width) >> 1);
@@ -7030,7 +7030,7 @@ int enc_cross_random_access_point_referencing_extension(COM_BSW * bs, unsigned i
         if (i % 2 == 0)
         {
             com_bsw_write1(bs, 1);                          // marker_bit              u(1)
-        }   
+        }
     }
 
     com_bsw_write1(bs, 1);                                  // stuffing bit

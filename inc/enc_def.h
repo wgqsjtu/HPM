@@ -909,6 +909,8 @@ void addUniMvInfo(ENC_CORE *core, BLK_UNI_MV_INFO *tmpUniMVInfo);
 typedef struct _ENC_CTX ENC_CTX;
 struct _ENC_CTX
 {
+    int***               texture_mask;
+    u8                   texture_flag;
     COM_INFO              info;
     /* address of current input picture, ref_picture  buffer structure */
     ENC_PICO            *pico_buf[ENC_MAX_INBUF_CNT];
@@ -1139,6 +1141,7 @@ void com_malloc_3d_Buf        (pel ****array3D,  int candNum, int compNum, int s
 void com_malloc_3d_Buf_BOOL   (BOOL ****array3D, int wNum,    int hNum,    int Num                );
 #endif
 int enc_picbuf_get_inbuf(ENC_CTX * ctx, COM_IMGB ** img);
+void trantm( ENC_CTX * ctx, int*** tm);
 #if REPEAT_SEQ_HEADER
 int init_seq_header(ENC_CTX * ctx, COM_BITB * bitb);
 #else

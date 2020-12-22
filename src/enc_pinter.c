@@ -1058,7 +1058,7 @@ static void make_cand_list(ENC_CORE *core, ENC_CTX *ctx, int *mode_list, double 
         }
 
 #if DMVR
-        dmvr.poc_c = ctx->ptr; 
+        dmvr.poc_c = ctx->ptr;
         dmvr.dmvr_current_template = pi->dmvr_template;
         dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
         dmvr.apply_DMVR = (mod_info_curr->umve_flag == 0) && ctx->info.sqh.dmvr_enable_flag;
@@ -1157,7 +1157,7 @@ static void make_cand_list(ENC_CORE *core, ENC_CTX *ctx, int *mode_list, double 
         if (ctx->info.sqh.umve_enh_enable_flag)
         {
             sort_cand_list(skip_idx, cost_y, core->cu_candCost_list, core->cu_cand_list, num_cands_all);
-        }        
+        }
 #endif
     }
 
@@ -1210,7 +1210,7 @@ static int make_cand_inter_filter_list(ENC_CORE *core, ENC_CTX *ctx, int *mode_l
     {
         return num_rdo;
     }
-    
+
     for (skip_idx = 0; skip_idx < num_rdo; skip_idx++)
     {
         inter_filter_list[skip_idx] = 0;
@@ -1582,7 +1582,7 @@ void check_best_mode(ENC_CORE *core, ENC_PINTER *pi, const double cost_curr, dou
             if (core->sbTmvp_flag)
             {
                 assert(core->mvap_flag == 0);
-                
+
                 for (int i = 0; i<SBTMVP_NUM; i++)
                 {
                     core->best_sbTmvp[i].mv[REFP_0][MV_X] = core->sbTmvp[i].mv[REFP_0][MV_X];
@@ -1591,7 +1591,7 @@ void check_best_mode(ENC_CORE *core, ENC_PINTER *pi, const double cost_curr, dou
                     core->best_sbTmvp[i].mv[REFP_1][MV_Y] = core->sbTmvp[i].mv[REFP_1][MV_Y];
                     core->best_sbTmvp[i].ref_idx[REFP_0] = core->sbTmvp[i].ref_idx[REFP_0];
                     core->best_sbTmvp[i].ref_idx[REFP_1] = core->sbTmvp[i].ref_idx[REFP_1];
-                
+
                 }
                 for (lidx = 0; lidx < REFP_NUM; lidx++)
                 {
@@ -1907,7 +1907,7 @@ static double pinter_residue_rdo(ENC_CTX *ctx, ENC_CORE *core, int bForceAllZero
     {
 #if DMVR
         COM_DMVR dmvr;
-        dmvr.poc_c = ctx->ptr; 
+        dmvr.poc_c = ctx->ptr;
         dmvr.dmvr_current_template = pi->dmvr_template;
         dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
         dmvr.apply_DMVR = apply_dmvr && ctx->info.sqh.dmvr_enable_flag;
@@ -2689,7 +2689,7 @@ double pinter_residue_rdo_chroma(ENC_CTX *ctx, ENC_CORE *core
     }
 
 #if DMVR
-    dmvr.poc_c = ctx->ptr; 
+    dmvr.poc_c = ctx->ptr;
     dmvr.dmvr_current_template = pi->dmvr_template;
     dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
     dmvr.apply_DMVR = apply_dmvr && ctx->info.sqh.dmvr_enable_flag;
@@ -2843,7 +2843,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
     int cu_width = 1 << cu_width_log2;
     int cu_height = 1 << cu_height_log2;
     int scup_co = get_colocal_scup(mod_info_curr->scup, ctx->info.pic_width_in_scu, ctx->info.pic_height_in_scu);
-#if SUB_TMVP 
+#if SUB_TMVP
     int i;
     int sb_scup[SBTMVP_NUM];
     int sb_scup_co[SBTMVP_NUM];
@@ -2870,7 +2870,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
     memset(mod_info_curr->bgc_flag_cands, 0, (MAX_SKIP_NUM + UMVE_MAX_REFINE_NUM_SEC_SET * UMVE_BASE_NUM) * sizeof(s8));
     memset(mod_info_curr->bgc_idx_cands, 0, (MAX_SKIP_NUM + UMVE_MAX_REFINE_NUM_SEC_SET * UMVE_BASE_NUM) * sizeof(s8));
 #endif
-#if SUB_TMVP 
+#if SUB_TMVP
     if (ctx->info.sqh.sbtmvp_enable_flag)
     {
         for (i = 0; i < SBTMVP_NUM; i++)
@@ -2975,7 +2975,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
         int skip_idx;
         for (skip_idx = 0; skip_idx < num_cands; skip_idx++)
         {
-            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_cands_curr, ctx->info.sqh.num_of_hmvp_cand, 
+            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_cands_curr, ctx->info.sqh.num_of_hmvp_cand,
 #if MVAP
                 ctx->info.sqh.num_of_mvap_cand,
 #endif
@@ -2991,7 +2991,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
             s8 bgc_flag = core->bgc_flag_cands[skip_idx - 1];
             s8 bgc_idx = core->bgc_idx_cands[skip_idx - 1];
 #endif
-            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_cands_curr, ctx->info.sqh.num_of_hmvp_cand, 
+            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_cands_curr, ctx->info.sqh.num_of_hmvp_cand,
 #if MVAP
                 ctx->info.sqh.num_of_mvap_cand,
 #endif
@@ -3017,7 +3017,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
         }
 #endif
 #endif
-        for (skip_idx = cnt_hmvp_cands_curr; skip_idx < (TRADITIONAL_SKIP_NUM + 
+        for (skip_idx = cnt_hmvp_cands_curr; skip_idx < (TRADITIONAL_SKIP_NUM +
 #if MVAP
             max(ctx->info.sqh.num_of_hmvp_cand, ctx->info.sqh.num_of_mvap_cand)) // fill skip candidates when hmvp not enough
 #else
@@ -3026,7 +3026,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
             ; skip_idx++)
         {
             // cnt_hmvp_cands_curr not changed
-            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_extend, ctx->info.sqh.num_of_hmvp_cand, 
+            fill_skip_candidates(motion_cands_curr, &cnt_hmvp_extend, ctx->info.sqh.num_of_hmvp_cand,
 #if MVAP
                 ctx->info.sqh.num_of_mvap_cand,
 #endif
@@ -3045,7 +3045,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
         assert(cnt_hmvp_extend == (TRADITIONAL_SKIP_NUM + ctx->info.sqh.num_of_hmvp_cand));
 #endif
 
-        get_hmvp_skip_cands(motion_cands_curr, cnt_hmvp_extend, 
+        get_hmvp_skip_cands(motion_cands_curr, cnt_hmvp_extend,
 #if BGC_EXT
             bgc_flag_cands_curr, bgc_idx_cands_curr, mod_info_curr->bgc_flag_cands, mod_info_curr->bgc_idx_cands,
 #endif
@@ -3067,7 +3067,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
         derive_umve_base_motions(&ctx->info, mod_info_curr, &ctx->map, pmv_cands[0], refi_cands[0], pmv_base_cands, refi_base_cands);
 #endif
 
-#if UMVE_ENH 
+#if UMVE_ENH
         int numUMVEIndices = (ctx->info.pic_header.umve_set_flag == 0) ? UMVE_MAX_REFINE_NUM : UMVE_MAX_REFINE_NUM_SEC_SET;
 #else
         int numUMVEIndices = UMVE_MAX_REFINE_NUM;
@@ -3081,7 +3081,7 @@ static void derive_inter_cands(ENC_CTX *ctx, ENC_CORE *core, s16(*pmv_cands)[REF
         for (umve_idx = 0; umve_idx < numUMVEIndices; umve_idx++)
         {
             derive_umve_final_motions(umve_idx, pi->refp, pi->ptr, pmv_base_cands, refi_base_cands, &pmv_cands[*num_cands_woUMVE], &refi_cands[*num_cands_woUMVE]
-#if UMVE_ENH 
+#if UMVE_ENH
                 , (BOOL)ctx->info.pic_header.umve_set_flag
 #endif
 #if BGC
@@ -3217,11 +3217,19 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
         cost = pinter_residue_rdo(ctx, core, 0
 #if DMVR
                                   , (mod_info_curr->umve_flag == 0) && ctx->info.sqh.dmvr_enable_flag
-#endif  
+#endif
         );
+        //
+        if(ctx->texture_flag &&(cu_height == 128) && (cu_width==128)&&(ctx->poc%2==1))
+        {
 
-        //if(cu_height == 128 && cu_width==128)
-            cost = 1;
+            //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
+            int col = mod_info_curr->x_pos / 128;
+            int row = mod_info_curr->y_pos / 128;
+            //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
+            if(ctx->texture_mask[ctx->poc][row][col] == 1)
+                cost = 1;
+        }
         //printf("pinter_residue_rdo \n");
         check_best_mode( core, pi, cost, cost_best );
     }
@@ -3275,7 +3283,7 @@ static void analyze_affine_merge( ENC_CTX *ctx, ENC_CORE *core, double *cost_bes
 #else
     num_cands = com_get_affine_merge_candidate(&ctx->info, mod_info_curr, pi->refp, &ctx->map, mrg_list_refi, mrg_list_cp_mv, mrg_list_cp_num, ctx->ptr);
 #endif
-  
+
 
     if ( num_cands == 0 )
         return;
@@ -3442,7 +3450,7 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
     s8           mrg_list_refi[AFF_MAX_NUM_MRG][REFP_NUM];
     int          mrg_list_cp_num[AFF_MAX_NUM_MRG];
     CPMV         mrg_list_cp_mv[AFF_MAX_NUM_MRG][REFP_NUM][VER_NUM][MV_D];
-#if BGC_EXT 
+#if BGC_EXT
     s8           mrg_list_bgc_flag[AFF_MAX_NUM_MRG];
     s8           mrg_list_bgc_idx[AFF_MAX_NUM_MRG];
 #endif
@@ -3487,7 +3495,7 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
         return;
     }
     // set motion information
-    mod_info_curr->umve_flag = 0; 
+    mod_info_curr->umve_flag = 0;
 #if INTERPF
     mod_info_curr->inter_filter_flag = 0;
 #endif
@@ -3528,7 +3536,7 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
             mod_info_curr->affine_mv[REFP_1][1][MV_X] = (CPMV)COM_CLIP3(COM_CPMV_MIN, COM_CPMV_MAX, mrg_list_cp_mv[skip_idx_best][REFP_1][1][MV_X] + affine_mv_offset[REFP_1][MV_X]);
             mod_info_curr->affine_mv[REFP_1][1][MV_Y] = (CPMV)COM_CLIP3(COM_CPMV_MIN, COM_CPMV_MAX, mrg_list_cp_mv[skip_idx_best][REFP_1][1][MV_Y] + affine_mv_offset[REFP_1][MV_Y]);
             mod_info_curr->affine_umve_idx[1] = affine_umve_idx1_best;
-            
+
             double cost_y = GetCost_SATD(ctx, core);
             if (cost_y < cost_best_satd)
             {
@@ -3577,7 +3585,7 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
                     affine_umve_idx1_change = 1;
                 }
             }
-            
+
         }
 
         if (affine_umve_idx1_best == -1)
@@ -4221,7 +4229,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
 
 #if DMVR
         dmvr.apply_DMVR = 0;
-#endif 
+#endif
         com_mc(x, y, cu_width, cu_height, cu_width, ctx->cand_buff[cand_idx], &ctx->info, mod_info_curr, pi->refp, CHANNEL_L, bit_depth
 #if DMVR
             , &dmvr
@@ -4239,7 +4247,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
             , mod_info_curr->bgc_flag, mod_info_curr->bgc_idx
 #endif
         );
-        sad_whole_blk[cand_idx] = calc_sad_16b(cu_width, cu_height, y_org, ctx->cand_buff[cand_idx][Y_C], y_org_s, cu_width, bit_depth);  // sad 
+        sad_whole_blk[cand_idx] = calc_sad_16b(cu_width, cu_height, y_org, ctx->cand_buff[cand_idx][Y_C], y_org_s, cu_width, bit_depth);  // sad
 
         // calc sad of UMVE candidates
 
@@ -4263,7 +4271,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
 
 #if DMVR
             dmvr.apply_DMVR = 0;
-#endif 
+#endif
             com_mc(x, y, cu_width, cu_height, cu_width, ctx->candBuffUMVE[cand_idx][awp_mvr_idx], &ctx->info, mod_info_curr, pi->refp, CHANNEL_L, bit_depth
 #if DMVR
                 , &dmvr
@@ -4282,7 +4290,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
 #endif
             );
 
-            sad_umve_whole_blk[cand_idx][awp_mvr_idx] = calc_sad_16b(cu_width, cu_height, y_org, ctx->candBuffUMVE[cand_idx][awp_mvr_idx][Y_C], y_org_s, cu_width, bit_depth);  // sad 
+            sad_umve_whole_blk[cand_idx][awp_mvr_idx] = calc_sad_16b(cu_width, cu_height, y_org, ctx->candBuffUMVE[cand_idx][awp_mvr_idx][Y_C], y_org_s, cu_width, bit_depth);  // sad
         }
     }
 
@@ -4344,7 +4352,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
                 sad_small = calc_sad_mask_16b(cu_width, cu_height, y_org, ctx->cand_buff[cand_idx][Y_C], ctx->awp_bin_weight0[cu_width_log2 - MIN_AWP_SIZE_LOG2][cu_height_log2 - MIN_AWP_SIZE_LOG2][awp_idx], y_org_s, cu_width, cu_width, bit_depth);
 
                 awp_cost0 = (double)sad_small + awp_cand_idx_cost[cand_idx];  // P0 cost
-                sad_large = sad_whole_blk[cand_idx] - sad_small;             // P1 sad 
+                sad_large = sad_whole_blk[cand_idx] - sad_small;             // P1 sad
                 awp_cost1 = (double)sad_large + awp_cand_idx_cost[cand_idx];  // P1 cost
             }
 
@@ -4406,7 +4414,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
                     sad_small = calc_sad_mask_16b(cu_width, cu_height, y_org, ctx->candBuffUMVE[cand_idx][awp_mvr_idx][Y_C], ctx->awp_bin_weight1[cu_width_log2 - MIN_AWP_SIZE_LOG2][cu_height_log2 - MIN_AWP_SIZE_LOG2][awp_idx], y_org_s, cu_width, cu_width, bit_depth);
 
                     awp_cost1 = (double)sad_small + awp_umve_idx_cost[awp_mvr_idx];   // P1 cost
-                    sad_large = sad_umve_whole_blk[cand_idx][awp_mvr_idx] - sad_small; // P0 sad  
+                    sad_large = sad_umve_whole_blk[cand_idx][awp_mvr_idx] - sad_small; // P0 sad
                     awp_cost0 = (double)sad_large + awp_umve_idx_cost[awp_mvr_idx];   // P0 cost
                 }
                 else  // P1 dominate
@@ -4415,7 +4423,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
                     sad_small = calc_sad_mask_16b(cu_width, cu_height, y_org, ctx->candBuffUMVE[cand_idx][awp_mvr_idx][Y_C], ctx->awp_bin_weight0[cu_width_log2 - MIN_AWP_SIZE_LOG2][cu_height_log2 - MIN_AWP_SIZE_LOG2][awp_idx], y_org_s, cu_width, cu_width, bit_depth);
 
                     awp_cost0 = (double)sad_small + awp_umve_idx_cost[awp_mvr_idx];   // P0 cost
-                    sad_large = sad_umve_whole_blk[cand_idx][awp_mvr_idx] - sad_small; // P1 sad 
+                    sad_large = sad_umve_whole_blk[cand_idx][awp_mvr_idx] - sad_small; // P1 sad
                     awp_cost1 = (double)sad_large + awp_umve_idx_cost[awp_mvr_idx];   // P1 cost
                 }
 
@@ -4562,7 +4570,7 @@ static void analyze_awp_merge_comb(ENC_CTX *ctx, ENC_CORE *core, double *cost_be
     {
         mod_info_curr->awp_flag = 1;
         mod_info_curr->skip_idx = best_satd_awp_idx[awp_rdo_idx];  // partition index
-        mod_info_curr->awp_idx0 = best_cand0[awp_rdo_idx];          // candIdx0 
+        mod_info_curr->awp_idx0 = best_cand0[awp_rdo_idx];          // candIdx0
         mod_info_curr->awp_idx1 = best_cand1[awp_rdo_idx];          // candIdx1
         mod_info_curr->awp_mvr_idx0 = best_umve0_idx[awp_rdo_idx];    // umveIdx0
         mod_info_curr->awp_mvr_idx1 = best_umve1_idx[awp_rdo_idx];    // umveIdx1
@@ -5065,7 +5073,7 @@ static void analyze_bi(ENC_CTX *ctx, ENC_CORE *core, s16 mv_L0L1[REFP_NUM][MV_D]
         mod_info_curr->refi[REFP_1] = refi[REFP_1];
 
 #if DMVR
-        dmvr.poc_c = ctx->ptr; 
+        dmvr.poc_c = ctx->ptr;
         dmvr.dmvr_current_template = pi->dmvr_template;
         dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
         dmvr.apply_DMVR = 0;
@@ -5285,15 +5293,15 @@ static u32 smvd_refine( ENC_CTX *ctx, ENC_CORE *core, int x, int y, int log2_cuw
             mod_info_curr->mv[REFP_0][MV_Y] = mv_cand[REFP_0][MV_Y];
             mod_info_curr->mv[REFP_1][MV_X] = mv_cand[REFP_1][MV_X];
             mod_info_curr->mv[REFP_1][MV_Y] = mv_cand[REFP_1][MV_Y];
-            
+
 #if DMVR
-            dmvr.poc_c = ctx->ptr; 
+            dmvr.poc_c = ctx->ptr;
             dmvr.dmvr_current_template = pi->dmvr_template;
             dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
             dmvr.apply_DMVR = 0;
             dmvr.dmvr_padding_buf = mod_info_curr->dmvr_padding_buf;
 #endif
-            
+
             // get cost
             int enc_fast = search_pattern == 2;
             com_mc(mod_info_curr->x_pos, mod_info_curr->y_pos, mod_info_curr->cu_width, mod_info_curr->cu_height, mod_info_curr->cu_width, mod_info_curr->pred, &ctx->info, mod_info_curr, pi->refp, CHANNEL_L, bit_depth
@@ -5410,7 +5418,7 @@ static void analyze_smvd( ENC_CTX *ctx, ENC_CORE *core, double *cost_best )
         mod_info_curr->mv[REFP_1][MV_Y] = mv[REFP_1][MV_Y];
 
 #if DMVR
-        dmvr.poc_c = ctx->ptr; 
+        dmvr.poc_c = ctx->ptr;
         dmvr.dmvr_current_template = pi->dmvr_template;
         dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
         dmvr.apply_DMVR = 0;
@@ -5454,7 +5462,7 @@ static void analyze_smvd( ENC_CTX *ctx, ENC_CORE *core, double *cost_best )
         mod_info_curr->mv[REFP_1][MV_Y] = mv_bi[REFP_1][MV_Y];
 
 #if DMVR
-        dmvr.poc_c = ctx->ptr; 
+        dmvr.poc_c = ctx->ptr;
         dmvr.dmvr_current_template = pi->dmvr_template;
         dmvr.dmvr_ref_pred_interpolated = pi->dmvr_ref_pred_interpolated;
         dmvr.apply_DMVR = 0;

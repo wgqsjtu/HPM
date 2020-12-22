@@ -4611,93 +4611,96 @@ int main(int argc, const char **argv)
 
     int***  texture_mask = NULL;
     int row = 0, column = 0;
-    for(int i = 1; i <= param_input.frames_to_be_encoded;i++)
+    if(op_flag[OP_FLAG_FNAME_TMF])
     {
-        //get texture mask file path
-        char text_mask_file[256];
-        char list[20];
-        strcpy(text_mask_file, op_fname_tmf);
-        sprintf(list, "/%03d.txt", i);
-        strcat(text_mask_file, list);
+        for(int i = 1; i <= param_input.frames_to_be_encoded;i++)
+        {
+            //get texture mask file path
+            char text_mask_file[256];
+            char list[20];
+            strcpy(text_mask_file, op_fname_tmf);
+            sprintf(list, "/%03d.txt", i);
+            strcat(text_mask_file, list);
 
-        // read file
-        //
-        FILE* fp_mask;
-        int r, l;
-        char ch;
-        printf("%s\n", text_mask_file);
-        // read texture mask file
-        if ((fp_mask = fopen(text_mask_file, "r")) == NULL)
-        {
-            printf("texture mask file open error\n");
-            return 0;
-        }
-        if(i == 1)
-        {
-            // Statistical column number
-            while (!feof(fp_mask) && (ch = fgetc(fp_mask)) != '\n')
+            // read file
+            //
+            FILE* fp_mask;
+            int r, l;
+            char ch;
+            //printf("%s\n", text_mask_file);
+            // read texture mask file
+            if ((fp_mask = fopen(text_mask_file, "r")) == NULL)
             {
-                if (ch == ' ')
-                    column++;
-            }
-            column++;
-            if (column == 1)
-            {
-                printf("texture mask file no data\n");
+                printf("texture mask file open error\n");
                 return 0;
             }
-            // Statistical column number
-            fseek(fp_mask, 0L, 0);
-            while (!feof(fp_mask))
+            if(i == 1)
             {
-                if (fgetc(fp_mask) == '\n')
-                    row++;
-            }
-            //row++;
-            if (row == 1)
-            {
-                printf("texture mask file no data\n");
-                return 0;
-            }
-            printf("%d,%d\n", row,column);
-            // Allocate memory
-            texture_mask = (int***)malloc(sizeof(int**) * param_input.frames_to_be_encoded);
-            for (int k = 0; k < param_input.frames_to_be_encoded; k++)
-            {
-                texture_mask[k] = (int**)malloc(sizeof(int*) * row);
-                for (r = 0; r<row; r++)
-                    texture_mask[k][r] = (int*)malloc(sizeof(int) * column);
-            }
-            //read data
-            fseek(fp_mask, 0L, 0);
-            while (!feof(fp_mask))
-                for (r = 0; r < row; r++)
-                    for (l = 0; l < column; l++)
-                        if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
-            for (r = 0; r < row; r++)
-            {
-                for (l = 0; l < column; l++)
-                    l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
-                printf("\n");
-            }
-            fclose(fp_mask);
+                // Statistical column number
+                while (!feof(fp_mask) && (ch = fgetc(fp_mask)) != '\n')
+                {
+                    if (ch == ' ')
+                        column++;
+                }
+                column++;
+                if (column == 1)
+                {
+                    printf("texture mask file no data\n");
+                    return 0;
+                }
+                // Statistical column number
+                fseek(fp_mask, 0L, 0);
+                while (!feof(fp_mask))
+                {
+                    if (fgetc(fp_mask) == '\n')
+                        row++;
+                }
+                //row++;
+                if (row == 1)
+                {
+                    printf("texture mask file no data\n");
+                    return 0;
+                }
+                //printf("%d,%d\n", row,column);
+                // Allocate memory
+                texture_mask = (int***)malloc(sizeof(int**) * param_input.frames_to_be_encoded);
+                for (int k = 0; k < param_input.frames_to_be_encoded; k++)
+                {
+                    texture_mask[k] = (int**)malloc(sizeof(int*) * row);
+                    for (r = 0; r<row; r++)
+                        texture_mask[k][r] = (int*)malloc(sizeof(int) * column);
+                }
+                //read data
+                fseek(fp_mask, 0L, 0);
+                while (!feof(fp_mask))
+                    for (r = 0; r < row; r++)
+                        for (l = 0; l < column; l++)
+                            if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
+                // for (r = 0; r < row; r++)
+                // {
+                //     for (l = 0; l < column; l++)
+                //         l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
+                //     printf("\n");
+                // }
+                fclose(fp_mask);
 
-        }
-        else
-        {
-            //read data
-            fseek(fp_mask, 0L, 0);
-            while (!feof(fp_mask))
-                for (r = 0; r < row; r++)
-                    for (l = 0; l < column; l++)
-                        if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
-            for (r = 0; r < row; r++)
-            {
-                for (l = 0; l < column; l++)
-                    l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
-                printf("\n");
             }
-            fclose(fp_mask);
+            else
+            {
+                //read data
+                fseek(fp_mask, 0L, 0);
+                while (!feof(fp_mask))
+                    for (r = 0; r < row; r++)
+                        for (l = 0; l < column; l++)
+                            if(fscanf(fp_mask, "%d,", &texture_mask[i-1][r][l])){}
+                // for (r = 0; r < row; r++)
+                // {
+                //     for (l = 0; l < column; l++)
+                //         l == column - 1 ? printf("%d", texture_mask[i-1][r][l]) : printf("%d,", texture_mask[i-1][r][l]);
+                //     printf("\n");
+                // }
+                fclose(fp_mask);
+            }
         }
     }
 
@@ -4860,6 +4863,10 @@ int main(int argc, const char **argv)
 #endif
     /* create encoder */
     id = enc_create(&param_input, NULL);
+
+    if(op_flag[OP_FLAG_FNAME_TMF])
+        trantm( (ENC_CTX *)id, texture_mask);
+
     if (id == NULL)
     {
         v0print("cannot create encoder\n");
@@ -5359,12 +5366,15 @@ ERR:
     }
 #endif
     // free
-     for (int k = 0; k < param_input.frames_to_be_encoded; k++)
-     {
-        for(int r=0; r<row; r++)
-            free(texture_mask[k][r]);
-        free(texture_mask[k]);
-     }
-    free(texture_mask);
+    if(op_flag[OP_FLAG_FNAME_TMF])
+    {
+        for (int k = 0; k < param_input.frames_to_be_encoded; k++)
+        {
+            for(int r=0; r<row; r++)
+                free(texture_mask[k][r]);
+            free(texture_mask[k]);
+        }
+        free(texture_mask);
+    }
     return 0;
 }

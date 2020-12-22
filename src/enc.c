@@ -2104,6 +2104,12 @@ int enc_picbuf_get_inbuf(ENC_CTX * ctx, COM_IMGB ** imgb)
     return COM_ERR_UNEXPECTED;
 }
 
+void trantm( ENC_CTX * ctx, int*** tm)
+{
+    ctx->texture_mask = tm;
+    ctx->texture_flag = 1;
+}
+
 #if REPEAT_SEQ_HEADER
 int init_seq_header( ENC_CTX * ctx, COM_BITB * bitb )
 {
