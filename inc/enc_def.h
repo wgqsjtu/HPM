@@ -311,6 +311,7 @@ typedef struct _ENC_PARENT_INFO
 typedef struct _ENC_PARAM
 {
     char*          textmask_path;
+    int            tm_size;
 #if PHASE_2_PROFILE
     /* profile value */
     int            profile;
@@ -909,7 +910,10 @@ void addUniMvInfo(ENC_CORE *core, BLK_UNI_MV_INFO *tmpUniMVInfo);
 typedef struct _ENC_CTX ENC_CTX;
 struct _ENC_CTX
 {
-    int***               texture_mask;
+    int***               texture_mask128;
+    int***               texture_mask64;
+    int***               texture_mask32;
+    int***               texture_mask16;
     u8                   texture_flag;
     COM_INFO              info;
     /* address of current input picture, ref_picture  buffer structure */
@@ -1141,7 +1145,7 @@ void com_malloc_3d_Buf        (pel ****array3D,  int candNum, int compNum, int s
 void com_malloc_3d_Buf_BOOL   (BOOL ****array3D, int wNum,    int hNum,    int Num                );
 #endif
 int enc_picbuf_get_inbuf(ENC_CTX * ctx, COM_IMGB ** img);
-void trantm( ENC_CTX * ctx, int*** tm);
+void trantm( ENC_CTX * ctx, int*** tm128, int*** tm64, int*** tm32, int*** tm16);
 #if REPEAT_SEQ_HEADER
 int init_seq_header(ENC_CTX * ctx, COM_BITB * bitb);
 #else

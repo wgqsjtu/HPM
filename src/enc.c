@@ -2104,9 +2104,12 @@ int enc_picbuf_get_inbuf(ENC_CTX * ctx, COM_IMGB ** imgb)
     return COM_ERR_UNEXPECTED;
 }
 
-void trantm( ENC_CTX * ctx, int*** tm)
+void trantm( ENC_CTX * ctx, int*** tm128, int*** tm64, int*** tm32, int*** tm16)
 {
-    ctx->texture_mask = tm;
+    ctx->texture_mask128 = tm128;
+    ctx->texture_mask64 = tm64;
+    ctx->texture_mask32 = tm32;
+    ctx->texture_mask16 = tm16;
     ctx->texture_flag = 1;
 }
 

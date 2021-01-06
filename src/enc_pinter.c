@@ -3220,16 +3220,61 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
 #endif
         );
         //
-        if(ctx->texture_flag &&(cu_height == 128) && (cu_width==128)&&(ctx->poc%2==1))
-        {
+        //int tm_size = ctx->param.tm_size;
+        //int tm_size = 128;
+#define mask128  1
+#define mask64  1
+#define mask32  1
+#define mask16  0
 
-            //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
-            int col = mod_info_curr->x_pos / 128;
-            int row = mod_info_curr->y_pos / 128;
-            //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
-            if(ctx->texture_mask[ctx->poc][row][col] == 1)
-                cost = 1;
+        if(ctx->texture_flag&&(ctx->poc%2==1))
+        {
+#if mask128
+            if((cu_height == 128) && (cu_width == 128))
+            {
+                //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
+                int col = mod_info_curr->x_pos / 128;
+                int row = mod_info_curr->y_pos / 128;
+                //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
+                if(ctx->texture_mask128[ctx->poc][row][col] == 1)
+                    cost = 1;
+            }
+#endif
+#if mask64
+            if((cu_height == 64) && (cu_width == 64))
+            {
+                //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
+                int col = mod_info_curr->x_pos / 64;
+                int row = mod_info_curr->y_pos / 64;
+                //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
+                if(ctx->texture_mask64[ctx->poc][row][col] == 1)
+                    cost = 1;
+            }
+#endif
+#if mask32
+            if((cu_height == 32) && (cu_width == 32))
+            {
+                //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
+                int col = mod_info_curr->x_pos / 32;
+                int row = mod_info_curr->y_pos / 32;
+                //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
+                if(ctx->texture_mask32[ctx->poc][row][col] == 1)
+                    cost = 1;
+            }
+#endif
+#if mask16
+            if((cu_height == 16) && (cu_width == 16))
+            {
+                //printf("%d\n", ctx->texture_mask[ctx->poc][0][0]);
+                int col = mod_info_curr->x_pos / 16;
+                int row = mod_info_curr->y_pos / 16;
+                //printf("mask:%d,%d,%d,%d,%d\n", mod_info_curr->x_pos, mod_info_curr->y_pos, row, col, ctx->texture_mask[ctx->poc][row][col]);
+                if(ctx->texture_mask16[ctx->poc][row][col] == 1)
+                    cost = 1;
+            }
+#endif
         }
+
         //printf("pinter_residue_rdo \n");
         check_best_mode( core, pi, cost, cost_best );
     }
