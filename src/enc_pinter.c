@@ -3222,12 +3222,12 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
         //
         //int tm_size = ctx->param.tm_size;
         //int tm_size = 128;
-#define mask128  1
-#define mask64  1
-#define mask32  1
+#define mask128  0
+#define mask64  0
+#define mask32  0
 #define mask16  0
 
-        if(ctx->texture_flag&&(ctx->poc%2==1))
+        if(ctx->texture_flag&&(ctx->poc%2==1)&&(cu_height == 128) && (cu_width == 128))
         {
 #if mask128
             if((cu_height == 128) && (cu_width == 128))
@@ -3273,7 +3273,9 @@ static void analyze_direct_skip(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
                     cost = 1;
             }
 #endif
+        cost = 1;
         }
+
 
         //printf("pinter_residue_rdo \n");
         check_best_mode( core, pi, cost, cost_best );
